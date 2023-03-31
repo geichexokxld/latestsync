@@ -29,17 +29,17 @@ PAGES = 0
 
 
 class MirrorStatus:
-    STATUS_UPLOADING = "Upload"
-    STATUS_DOWNLOADING = "Download"
-    STATUS_CLONING = "Clone"
-    STATUS_QUEUEDL = "QueueDl"
-    STATUS_QUEUEUP = "QueueUp"
-    STATUS_PAUSED = "Pause"
-    STATUS_ARCHIVING = "Archive"
-    STATUS_EXTRACTING = "Extract"
-    STATUS_SPLITTING = "Split"
-    STATUS_CHECKING = "CheckUp"
-    STATUS_SEEDING = "Seed"
+    STATUS_UPLOADING = "Uploading...📤"
+    STATUS_DOWNLOADING = "Downloading...📥"
+    STATUS_CLONING = "Cloning...♻️"
+    STATUS_QUEUEDL = "QueueDl...💤"
+    STATUS_QUEUEUP = "QueueUp...💤"
+    STATUS_PAUSED = "Paused...⏸️"
+    STATUS_ARCHIVING = "Archiving...🔐"
+    STATUS_EXTRACTING = "Extracting...📂"
+    STATUS_SPLITTING = "Splitting...✂️"
+    STATUS_CHECKING = "CheckingUp...📝"
+    STATUS_SEEDING = "Seeding...🌧"
 
 SIZE_UNITS = ['B', 'KB', 'MB', 'GB', 'TB', 'PB']
 
@@ -118,12 +118,12 @@ def get_progress_bar_string(pct):
     pct = float(pct.split('%')[0])
     p = min(max(pct, 0), 100)
     cFull = int(p // 8)
-    p_str = '■' * cFull
-    p_str += '□' * (12 - cFull)
+    p_str = '▰' * cFull
+    p_str += '▱' * (12 - cFull)
     return f"[{p_str}]"
 
 def get_readable_message():
-    msg = ""
+    msg = '<b>Powered By <a href="https://t.me/DhruvMirrorUpdates"><u>Dhruv Mirror Premium</u></a>\n</b>'
     button = None
     STATUS_LIMIT = config_dict['STATUS_LIMIT']
     tasks = len(download_dict)
@@ -132,11 +132,12 @@ def get_readable_message():
         globals()['COUNT'] -= STATUS_LIMIT
         globals()['PAGE_NO'] -= 1
     for download in list(download_dict.values())[COUNT:STATUS_LIMIT+COUNT]:
-        msg += f"<b>{download.status()}</b>: <code>{escape(str(download.name()))}</code>"
+        msg += f"\n<b>📁 Name </b>: <code>{escape(str(download.name()))}</code>"
+        msg += f"\nStatus : <b>{download.status()}</b>"
         if download.status() not in [MirrorStatus.STATUS_SPLITTING, MirrorStatus.STATUS_SEEDING]:
             msg += f"\n{get_progress_bar_string(download.progress())} {download.progress()}"
-            msg += f"\n<b>Processed</b>: {download.processed_bytes()} of {download.size()}"
-            msg += f"\n<b>Speed</b>: {download.speed()} | <b>ETA</b>: {download.eta()}"
+            msg += f"\n<b>Processed</b> : {download.processed_bytes()} of {download.size()}"
+            msg += f"\n<b>Speed</b> : {download.speed()} | <b>ETA</b>: {download.eta()}"
             if hasattr(download, 'seeders_num'):
                 try:
                     msg += f"\n<b>Seeders</b>: {download.seeders_num()} | <b>Leechers</b>: {download.leechers_num()}"
